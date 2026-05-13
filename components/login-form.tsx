@@ -24,6 +24,7 @@ export function LoginForm({
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+
   const router = useRouter();
 
   const handleLogin = async (e: React.FormEvent) => {
@@ -37,9 +38,13 @@ export function LoginForm({
         email,
         password,
       });
-      if (error) throw error;
+      if (error) {
+        throw error
+      };
+
+
       // Update this route to redirect to an authenticated route. The user already has an active session.
-      router.push("/protected");
+      router.push("/");
     } catch (error: unknown) {
       setError(error instanceof Error ? error.message : "An error occurred");
     } finally {
@@ -47,18 +52,47 @@ export function LoginForm({
     }
   };
 
+  const handleOAuthLogin = async (provider: "google") => {
+    const supabase = createClient();
+
+    const { error } = await supabase.auth.signInWithOAuth({
+      provider,
+      options: {
+        redirectTo: `${location.origin}/auth/callback`,
+      },
+    });
+
+    if (error) {
+      setError(error.message);
+    }
+  };
+
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
       <Card>
+
         <CardHeader>
+          <div className="flex flex-col gap-2 mt-4">
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => handleOAuthLogin("google")}
+            >
+              Continue with Google
+            </Button>
+
+          </div>
           <CardTitle className="text-2xl">Login</CardTitle>
+
           <CardDescription>
             Enter your email below to login to your account
           </CardDescription>
         </CardHeader>
+
         <CardContent>
           <form onSubmit={handleLogin}>
             <div className="flex flex-col gap-6">
+
               <div className="grid gap-2">
                 <Label htmlFor="email">Email</Label>
                 <Input
@@ -88,7 +122,11 @@ export function LoginForm({
                   onChange={(e) => setPassword(e.target.value)}
                 />
               </div>
-              {error && <p className="text-sm text-red-500">{error}</p>}
+              {error && (
+                <p className="rounded-md border border-destructive/30 bg-destructive/10 p-2 text-sm text-destructive">
+                  {error}
+                </p>
+              )}
               <Button type="submit" className="w-full" disabled={isLoading}>
                 {isLoading ? "Logging in..." : "Login"}
               </Button>

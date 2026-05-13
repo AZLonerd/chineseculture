@@ -1,28 +1,84 @@
-import Link from "next/link";
-import { Button } from "./ui/button";
-import { createClient } from "@/lib/supabase/server";
-import { LogoutButton } from "./logout-button";
+'use client';
 
-export async function AuthButton() {
-  const supabase = await createClient();
+import Link from 'next/link';
+import { useEffect, useState } from 'react';
+import { Button } from './ui/button';
+import { createClient } from '@/lib/supabase/client';
+import { LogoutButton } from './logout-button';
+import { useSignupStore } from '@/lib/stores/signup-store';
 
-  // You can also use getUser() which will be slower.
-  const { data } = await supabase.auth.getClaims();
 
-  const user = data?.claims;
+export function AuthButton() {
+  const [user, setUser] = useState<{ email: string } | null>(null);
+  const username = useSignupStore((s) => s.username);
+
+  const [usernametodisplay, setUsernametodisplay] = useState("")
+
+  useEffect(() => {
+    const supabase = createClient();
+
+
+    const getUser = async () => {
+      const { data } = await supabase.auth.getUser();
+
+      console.log(data)
+      if (!data.user) return;
+
+      setUser({ email: data?.user?.email! });
+
+      console.log(data.user.id)
+
+      const { data: profile, error } = await supabase
+        .from("profiles")
+        .select("username")
+        .eq("id", data.user.id)
+        .maybeSingle();
+
+
+      console.log("profile:", profile);
+      console.log("error:", error);
+
+      if (profile) {
+        setUsernametodisplay(profile?.username);
+      }
+
+
+
+    };
+
+    getUser();
+
+
+    const { data: listener } = supabase.auth.onAuthStateChange(
+      async (event, session) => {
+        if (session?.user) {
+          setUser({ email: session.user.email! });
+
+
+        } else {
+          setUser(null);
+          setUsernametodisplay("");
+        }
+      }
+    );
+
+
+
+
+    return () => {
+      listener.subscription.unsubscribe();
+    };
+  }, []);
 
   return user ? (
     <div className="flex items-center gap-4">
-      Hey, {user.email}!
+      Hey, {usernametodisplay}!
       <LogoutButton />
     </div>
   ) : (
     <div className="flex gap-2">
-      <Button asChild size="sm" variant={"outline"}>
+      <Button asChild size="sm" variant="outline">
         <Link href="/auth/login">Sign in</Link>
-      </Button>
-      <Button asChild size="sm" variant={"default"}>
-        <Link href="/auth/sign-up">Sign up</Link>
       </Button>
     </div>
   );

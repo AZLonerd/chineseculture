@@ -26,7 +26,7 @@ export default function Page() {
             </CardContent>
           </Card>
         </div>
-      </div>
+      </div> 
     </div>
   );
 }

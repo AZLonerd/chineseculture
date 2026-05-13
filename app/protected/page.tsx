@@ -1,9 +1,6 @@
 import { redirect } from "next/navigation";
 
 import { createClient } from "@/lib/supabase/server";
-import { InfoIcon } from "lucide-react";
-import { FetchDataSteps } from "@/components/tutorial/fetch-data-steps";
-import { Suspense } from "react";
 
 async function UserDetails() {
   const supabase = await createClient();
@@ -16,28 +13,19 @@ async function UserDetails() {
   return JSON.stringify(data.claims, null, 2);
 }
 
-export default function ProtectedPage() {
+export default async function ProtectedPage() {
+  const claimsJson = await UserDetails();
   return (
-    <div className="flex-1 w-full flex flex-col gap-12">
-      <div className="w-full">
-        <div className="bg-accent text-sm p-3 px-5 rounded-md text-foreground flex gap-3 items-center">
-          <InfoIcon size="16" strokeWidth={2} />
-          This is a protected page that you can only see as an authenticated
-          user
-        </div>
-      </div>
-      <div className="flex flex-col gap-2 items-start">
-        <h2 className="font-bold text-2xl mb-4">Your user details</h2>
-        <pre className="text-xs font-mono p-3 rounded border max-h-32 overflow-auto">
-          <Suspense>
-            <UserDetails />
-          </Suspense>
+    <div className="flex-1 w-full flex flex-col gap-6 items-center">
+      <section className="mythic-surface w-full max-w-3xl p-6">
+        <h1 className="text-xl font-semibold tracking-tight">Your session</h1>
+        <p className="mt-1 text-sm text-muted-foreground">
+          Claims returned from Supabase for the current user.
+        </p>
+        <pre className="mt-4 max-h-[60vh] overflow-auto rounded-lg border border-border/60 bg-background/40 p-4 text-xs text-muted-foreground">
+          {claimsJson}
         </pre>
-      </div>
-      <div>
-        <h2 className="font-bold text-2xl mb-4">Next steps</h2>
-        <FetchDataSteps />
-      </div>
+      </section>
     </div>
   );
 }
