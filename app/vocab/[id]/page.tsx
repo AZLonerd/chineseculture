@@ -1,16 +1,14 @@
-// app/vocab/[id]/page.tsx
-import { createClient } from "@/lib/supabase/server";
+import { Suspense } from "react";
+import VocabDetails from "./Vocabdetails";
 
-
-
-export default async function VocabById({ params }: any) {
-    const supabase = await createClient();
-    const { data: vocab, error } = await supabase
-        .from("vocabularies")
-        .select("id, word, meaning")
-        .eq("id", params.id)
-        .single();
-
-    if (error || !vocab) return <div>Vocab not found</div>;
-
+export default function Page({
+    params,
+}: {
+    params: Promise<{ id: string }>;
+}) {
+    return (
+        <Suspense fallback={<div>Loading vocab...</div>}>
+            <VocabDetails params={params} />
+        </Suspense>
+    );
 }

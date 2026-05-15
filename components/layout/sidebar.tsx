@@ -55,9 +55,9 @@ function SidebarButton({
         px-4 py-3
         rounded-full
         border border-secondary/35
-        bg-secondary/10
+        bg-gradient-to-r from-secondary/12 via-accent/10 to-primary/10
         text-foreground
-        hover:bg-secondary/15
+        hover:from-secondary/18 hover:via-accent/14 hover:to-primary/14
         hover:border-secondary/60
         hover:shadow-[0_0_18px_hsl(var(--secondary)/0.35)]
         transition-all duration-300
@@ -70,4 +70,3 @@ function SidebarButton({
     </Link>
   );
 }
-

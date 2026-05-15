@@ -1,4 +1,5 @@
 import { redirect } from "next/navigation";
+import { Suspense } from "react";
 
 import { createClient } from "@/lib/supabase/server";
 
@@ -13,8 +14,17 @@ async function UserDetails() {
   return JSON.stringify(data.claims, null, 2);
 }
 
-export default async function ProtectedPage() {
+async function ProtectedSession() {
   const claimsJson = await UserDetails();
+
+  return (
+    <pre className="mt-4 max-h-[60vh] overflow-auto rounded-lg border border-border/60 bg-background/40 p-4 text-xs text-muted-foreground">
+      {claimsJson}
+    </pre>
+  );
+}
+
+export default function ProtectedPage() {
   return (
     <div className="flex-1 w-full flex flex-col gap-6 items-center">
       <section className="mythic-surface w-full max-w-3xl p-6">
@@ -22,9 +32,15 @@ export default async function ProtectedPage() {
         <p className="mt-1 text-sm text-muted-foreground">
           Claims returned from Supabase for the current user.
         </p>
-        <pre className="mt-4 max-h-[60vh] overflow-auto rounded-lg border border-border/60 bg-background/40 p-4 text-xs text-muted-foreground">
-          {claimsJson}
-        </pre>
+        <Suspense
+          fallback={
+            <div className="mt-4 rounded-lg border border-border/60 bg-background/40 p-4 text-xs text-muted-foreground">
+              Loading session...
+            </div>
+          }
+        >
+          <ProtectedSession />
+        </Suspense>
       </section>
     </div>
   );

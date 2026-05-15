@@ -12,7 +12,7 @@ function VocabTypeCard({ title, description, href }: VocabTypeCardProps) {
   return (
     <Link
       href={href}
-      className="mythic-surface-soft group w-full min-w-[220px] max-w-[260px] px-5 py-4 transition-all duration-200 hover:bg-accent/20 hover:shadow-[0_0_22px_hsl(var(--secondary)/0.25)]"
+      className="mythic-surface-soft group w-full min-w-[220px] max-w-[260px] px-5 py-4 transition-all duration-200 hover:bg-accent/20 hover:shadow-[0_0_22px_hsl(var(--secondary)/0.25)] hover:[background-image:linear-gradient(145deg,hsl(var(--card)/0.82),hsl(var(--background)/0.7)),linear-gradient(135deg,hsl(var(--primary)/0.12),hsl(var(--secondary)/0.2))]"
     >
       <div className="flex items-start justify-between gap-3">
         <div className="flex flex-col gap-1">
@@ -59,4 +59,3 @@ export default function FourCardsHorizontal() {
     </section>
   );
 }
-

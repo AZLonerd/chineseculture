@@ -31,7 +31,7 @@ const Navbar = () => {
                     <Link
                         href="/"
                         aria-label="ChinaYaCulture Home"
-                        className="grid h-9 w-9 place-items-center rounded-lg border border-border/60 bg-gradient-to-br from-primary/80 via-secondary/40 to-background shadow-sm"
+                        className="grid h-9 w-9 place-items-center rounded-lg border border-border/60 bg-gradient-to-br from-primary/85 via-secondary/75 to-accent/70 shadow-[0_10px_28px_hsl(var(--primary)/0.28)]"
                     >
                         <span className="text-[10px] font-bold tracking-[0.25em] text-primary-foreground">
                             CY
