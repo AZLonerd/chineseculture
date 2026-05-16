@@ -1,9 +1,21 @@
-import React from 'react'
+import { Suspense } from "react";
+import Navbar from "@/components/features/navbar";
+import Categoriesdetails from "./Categoriesdetails";
 
-const page = () => {
+export default function Page({
+    params,
+}: {
+    params: Promise<{ categories: string }>;
+}) {
     return (
-        <div>page</div>
-    )
-}
+        <main className="min-h-screen">
+            <Navbar />
 
-export default page
+            <div className="px-4 py-6 md:px-6">
+                <Suspense fallback={<div>Loading vocab...</div>}>
+                    <Categoriesdetails params={params} />
+                </Suspense>
+            </div>
+        </main>
+    );
+}

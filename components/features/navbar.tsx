@@ -70,9 +70,6 @@ const Navbar = () => {
                 </div>
 
 
-                <div className="hidden md:block w-1/3">
-                    <Searchbar />
-                </div>
 
 
                 <div className="flex items-center gap-3">

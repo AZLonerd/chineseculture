@@ -10,7 +10,7 @@ export default function VocabCard({ id, word }: VocabCardProps) {
     return (
         <Link
             href={`/vocab/${id}`}
-            className="border rounded p-4 shadow hover:shadow-lg transition"
+            className="block w-full border rounded p-4 shadow transition hover:shadow-lg"
         >
             {word}
         </Link>

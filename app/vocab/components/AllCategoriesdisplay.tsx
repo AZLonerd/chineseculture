@@ -1,15 +1,22 @@
 "use client"
 
-import Link from "next/link";
-export default function AllCategoriesdisplay({ allcategories }: any) {
+import { Categorycard } from "./Categorycard";
+type Category = {
+    title: string;
+    type_number: string | number;
+};
+
+export default function AllCategoriesdisplay({
+    allcategories,
+}: {
+    allcategories: Category[];
+}) {
     console.log("CLIENT DATA:", allcategories);
 
     return (
-        <div className="flex">
-            {allcategories?.map((val: any) => (
-
-                <Link href={`vocab/categories/${val.type_number}`} >{val.title}</Link>
-
+        <div className="grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
+            {allcategories?.map((val) => (
+                <Categorycard key={val.type_number} Category={val} />
             ))}
         </div>
     );
