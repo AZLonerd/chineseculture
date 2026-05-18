@@ -55,6 +55,7 @@ export function SignUpForm({
           },
         },
       });
+
       if (signUpError) throw signUpError;
 
       const userId = signUpData.user?.id;
@@ -62,6 +63,9 @@ export function SignUpForm({
       if (!userId) {
         throw new Error("User ID not available yet. Please confirm your email first.");
       }
+
+      await supabase.from("profiles").insert({ id: userId, username: username })
+
 
 
       router.push("/auth/sign-up-success");

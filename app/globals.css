@@ -7,7 +7,7 @@
     /* Inspired by the provided OKLCH reference:
        - deep indigo-slate backgrounds
        - cool violet primary emphasis
-       - warmer chartreuse secondary contrast */
+       - vivid red secondary contrast */
     --background: 242 34% 11%;
     --foreground: 238 100% 97%;
     --card: 241 28% 16%;
@@ -16,7 +16,7 @@
     --popover-foreground: 238 100% 97%;
     --primary: 252 86% 77%;
     --primary-foreground: 242 34% 15%;
-    --secondary: 58 74% 67%;
+    --secondary: 0 100% 63%;
     --secondary-foreground: 242 34% 15%;
     --muted: 241 22% 20%;
     --muted-foreground: 239 54% 79%;
@@ -28,7 +28,7 @@
     --input: 242 24% 36%;
     --ring: 252 86% 77%;
     --chart-1: 252 86% 77%;
-    --chart-2: 58 74% 67%;
+    --chart-2: 0 100% 63%;
     --chart-3: 205 76% 67%;
     --chart-4: 286 64% 71%;
     --chart-5: 340 72% 68%;
@@ -44,7 +44,7 @@
     --popover-foreground: 238 100% 97%;
     --primary: 252 82% 76%;
     --primary-foreground: 242 36% 10%;
-    --secondary: 60 72% 66%;
+    --secondary: 0 100% 63%;
     --secondary-foreground: 242 36% 10%;
     --muted: 241 22% 16%;
     --muted-foreground: 239 48% 76%;
@@ -56,7 +56,7 @@
     --input: 242 22% 30%;
     --ring: 252 82% 76%;
     --chart-1: 252 82% 76%;
-    --chart-2: 60 72% 66%;
+    --chart-2: 0 100% 63%;
     --chart-3: 205 76% 67%;
     --chart-4: 286 64% 71%;
     --chart-5: 340 72% 68%;

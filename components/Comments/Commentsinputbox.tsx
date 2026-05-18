@@ -1,24 +1,39 @@
 "use client";
 
+
+//this component is a connection from frontend to backend. 
+
 import { useState } from "react";
+import { useParams } from "next/navigation";
 import { MessageSquareMore, Sparkles } from "lucide-react";
 
+import { Insertcommentstodb } from "@/app/vocab/lib/insertcommentstodb";
+import {
+  type CommentItem,
+  useCommentsStore,
+} from "@/lib/stores/comments-store";
+import { useSignupStore } from "@/lib/stores/signup-store";
 import { Button } from "@/components/ui/button";
 
-type CommentsinputboxProps = {
-  onSubmitComment?: (comment: string) => void | Promise<void>;
-  placeholder?: string;
-};
+function getInsertedComment(
+  insertedComment: CommentItem | CommentItem[] | null | undefined,
+) {
+  if (Array.isArray(insertedComment)) {
+    return insertedComment[0];
+  }
 
-export default function Commentsinputbox({
-  onSubmitComment,
-  placeholder = "Share your thoughts, examples, or cultural notes...",
-}: CommentsinputboxProps) {
-  const [comment, setComment] = useState("");
+  return insertedComment;
+}
+
+export default function Commentsinputbox() {
+  const params = useParams<{ id: string }>();
+  const [commentcontent, setComment] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const addComment = useCommentsStore((state) => state.addComment);
+  const username = useSignupStore((state) => state.username);
 
   const handleSubmit = async () => {
-    const trimmedComment = comment.trim();
+    const trimmedComment = commentcontent.trim();
 
     if (!trimmedComment) {
       return;
@@ -26,7 +41,24 @@ export default function Commentsinputbox({
 
     try {
       setIsSubmitting(true);
-      await onSubmitComment?.(trimmedComment);
+      const vocabNumber = Number(params.id);
+      const insertedComment = getInsertedComment(
+        (await Insertcommentstodb(vocabNumber, trimmedComment)) as
+        | CommentItem
+        | CommentItem[]
+        | null
+        | undefined,
+      );
+
+      addComment(
+        insertedComment ?? {
+          id: crypto.randomUUID(),
+          content: trimmedComment,
+          vocab_number: vocabNumber,
+          parent_comment: null,
+          username: username || null,
+        },
+      );
       setComment("");
     } finally {
       setIsSubmitting(false);
@@ -62,9 +94,9 @@ export default function Commentsinputbox({
 
       <div className="mythic-surface-soft rounded-2xl p-3">
         <textarea
-          value={comment}
+          value={commentcontent}
           onChange={(e) => setComment(e.target.value)}
-          placeholder={placeholder}
+          placeholder="insert some comments"
           rows={5}
           className="min-h-[120px] w-full resize-y border-0 bg-transparent text-sm text-foreground placeholder:text-muted-foreground focus:outline-none"
         />
@@ -78,12 +110,12 @@ export default function Commentsinputbox({
 
         <div className="flex items-center gap-3">
           <span className="text-xs text-muted-foreground">
-            {comment.trim().length}/300
+            {commentcontent.trim().length}/300
           </span>
           <Button
             type="button"
             onClick={handleSubmit}
-            disabled={isSubmitting || !comment.trim()}
+            disabled={isSubmitting || !commentcontent.trim()}
           >
             {isSubmitting ? "Posting..." : "Post comment"}
           </Button>

@@ -2,6 +2,7 @@ import { Suspense } from "react";
 import VocabDetails from "./Vocabdetails";
 
 import { Commentsdetails } from "./Commentsdetails";
+
 export default function Page({
     params,
 }: {
@@ -10,7 +11,7 @@ export default function Page({
     return (
         <Suspense fallback={<div>Loading vocab...</div>}>
             <VocabDetails params={params} />
-            <Commentsdetails />
+            <Commentsdetails params={params} />
         </Suspense>
     );
 }
