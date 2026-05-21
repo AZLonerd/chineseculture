@@ -11,7 +11,6 @@ export default function AllCategoriesdisplay({
 }: {
     allcategories: Category[];
 }) {
-    console.log("CLIENT DATA:", allcategories);
 
     return (
         <div className="grid gap-5 sm:grid-cols-2 xl:grid-cols-3">

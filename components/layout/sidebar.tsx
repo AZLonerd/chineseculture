@@ -7,9 +7,9 @@ export default function Sidebar() {
     <aside className="mythic-surface-soft h-full w-full p-6 flex flex-col justify-between">
       <div className="space-y-6">
         <div className="space-y-4">
-          <SidebarButton href="/celebrities" icon={<User size={18} />} label="Most liked" />
-          <SidebarButton href="/characters" icon={<Users size={18} />} label="Most used" />
-          <SidebarButton href="/concepts" icon={<Rocket size={18} />} label="Trending" />
+          <SidebarButton href="/celebrities" icon={<User size={18} />} label="Most liked vocabs" />
+          <SidebarButton href="/characters" icon={<Users size={18} />} label="Most frequently used" />
+          <SidebarButton href="/concepts" icon={<Rocket size={18} />} label="Newest trends" />
         </div>
 
         <div className="space-y-3 pt-6 text-sm text-muted-foreground">

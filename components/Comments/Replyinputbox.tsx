@@ -82,6 +82,7 @@ export default function Replyinputbox({
                     username: username || null,
                     parent_id: commentId,
                     parent_comment: commentId,
+                    ifliked: false,
                 },
             );
             setReplyContent("");

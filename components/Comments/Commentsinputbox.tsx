@@ -57,6 +57,7 @@ export default function Commentsinputbox() {
           vocab_number: vocabNumber,
           parent_comment: null,
           username: username || null,
+          ifliked: false
         },
       );
       setComment("");

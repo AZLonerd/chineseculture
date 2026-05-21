@@ -7,6 +7,7 @@ export type CommentItem = {
   content: string;
   created_at?: string | null;
   like_count?: number | null;
+  amountoflikes?: number | null;
   vocab_number: string | number;
   parent_id?: number | string | null;
   parent_comment?: number | string | null;
@@ -15,6 +16,7 @@ export type CommentItem = {
   user_email?: string | null;
   replies?: CommentItem[];
   [key: string]: unknown;
+  ifliked: boolean
 };
 
 
@@ -25,6 +27,8 @@ type CommentsStore = {
   setComments: (comments: CommentItem[]) => void;
   buildcommentstree: (comments: CommentItem[]) => void;
   addComment: (comment: CommentItem) => void;
+  incrementCommentLikes: (commentId: number | string) => void;
+  decrementCommentLikes: (commentId: number | string) => void;
   clearComments: () => void;
 };
 
@@ -76,6 +80,49 @@ export const useCommentsStore = create<CommentsStore>((set) => ({
   addComment: (comment) =>
     set((state) => {
       const updatedComments = [...state.flatComments, comment];
+
+      return {
+        flatComments: updatedComments,
+        comments: createCommentsTree(updatedComments),
+      };
+    }),
+  incrementCommentLikes: (commentId) =>
+    set((state) => {
+      const updatedComments = state.flatComments.map((comment) => {
+        if (comment.id !== commentId) {
+          return comment;
+        }
+
+        const nextAmountOfLikes = (comment.amountoflikes ?? comment.like_count ?? 0) + 1;
+
+        return {
+          ...comment,
+          amountoflikes: nextAmountOfLikes,
+          like_count: nextAmountOfLikes,
+        };
+      });
+
+      return {
+        flatComments: updatedComments,
+        comments: createCommentsTree(updatedComments),
+      };
+    }),
+  decrementCommentLikes: (commentId) =>
+    set((state) => {
+      const updatedComments = state.flatComments.map((comment) => {
+        if (comment.id !== commentId) {
+          return comment;
+        }
+
+        const currentLikes = comment.amountoflikes ?? comment.like_count ?? 0;
+        const nextAmountOfLikes = Math.max(currentLikes - 1, 0);
+
+        return {
+          ...comment,
+          amountoflikes: nextAmountOfLikes,
+          like_count: nextAmountOfLikes,
+        };
+      });
 
       return {
         flatComments: updatedComments,

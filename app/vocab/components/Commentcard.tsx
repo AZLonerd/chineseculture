@@ -6,9 +6,11 @@ import { Heart, MessageCircle } from "lucide-react";
 import Replyinputbox from "@/components/Comments/Replyinputbox";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { type CommentItem } from "@/lib/stores/comments-store";
+import { type CommentItem, useCommentsStore } from "@/lib/stores/comments-store";
 
 import { Insertlikestodb } from "../lib/insertlikestodb";
+
+import { Deletelikestodb } from "../lib/deletelikestodb";
 
 type CommentcardProps = {
   comment: CommentItem;
@@ -49,12 +51,56 @@ function formatCommentDate(createdAt?: string | null) {
 
 export function Commentcard({ comment }: CommentcardProps) {
   const [showReplyInput, setShowReplyInput] = useState(false);
+  const [isLiking, setIsLiking] = useState(false);
+  const incrementCommentLikes = useCommentsStore((state) => state.incrementCommentLikes);
+  const decrementCommentLikes = useCommentsStore((state) => state.decrementCommentLikes);
   const author = getCommentAuthor(comment);
   const isReply = comment.parent_comment !== null && comment.parent_comment !== undefined;
 
   const currentcommentid = comment.id;
-  const likes = comment.like_count ?? 0;
+  const likes = comment.amountoflikes ?? comment.like_count ?? 0;
 
+
+  const ifliked = comment.ifliked
+  const [iflikedafterclick, setiflikedafterclick] = useState(ifliked)
+
+
+  const handleLike = async () => {
+    if (isLiking) return;
+
+    setIsLiking(true);
+
+    const currentlyLiked = iflikedafterclick;
+    setiflikedafterclick(!currentlyLiked);
+
+    if (!currentlyLiked) {
+      incrementCommentLikes(comment.id);
+
+      try {
+        await Insertlikestodb(comment.id);
+      } catch (error) {
+
+        setiflikedafterclick(currentlyLiked);
+        decrementCommentLikes(comment.id);
+        console.error("Failed to like comment", error);
+      } finally {
+        setIsLiking(false);
+      }
+    } else {
+      decrementCommentLikes(comment.id);
+
+      try {
+        await Deletelikestodb(comment.id);
+      } catch (error) {
+
+        setiflikedafterclick(currentlyLiked);
+        incrementCommentLikes(comment.id);
+        console.error("Failed to unlike comment", error);
+      } finally {
+        setIsLiking(false);
+      }
+    }
+  };
 
 
   return (
@@ -98,8 +144,17 @@ export function Commentcard({ comment }: CommentcardProps) {
               className={cn(
                 "rounded-full border-primary/20 bg-primary/5 px-3 text-foreground hover:bg-primary/10",
               )}
+              disabled={isLiking}
+              onClick={handleLike}
             >
-              <Heart className="h-4 w-4 text-secondary" />
+              <Heart
+                className={cn(
+                  "h-4 w-4 transition-all",
+                  iflikedafterclick ? "fill-secondary text-secondary" : "text-secondary"
+                )}
+
+
+              />
               Like
               <span className="text-xs text-muted-foreground">{likes}</span>
             </Button>

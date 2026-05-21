@@ -5,7 +5,7 @@ import { createClient } from "@/lib/supabase/server"
 import { redirect } from "next/navigation";
 
 
-export async function Insertlikestodb(commentid: string | number) {
+export async function Deletelikestodb(commentid: string | number) {
 
     const supabase = await createClient();
 
@@ -13,10 +13,9 @@ export async function Insertlikestodb(commentid: string | number) {
 
     if (!user) {
         redirect("../../auth/sign-up")
+
+
     }
-
-    const commententry = { comment_id: commentid, user_id: user.id }
-
-    await supabase.from("vocab_comment_likes").insert(commententry)
+    await supabase.from("vocab_comment_likes").delete().eq("comment_id", commentid).eq("user_id", user.id)
 
 }

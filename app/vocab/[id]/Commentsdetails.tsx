@@ -1,3 +1,5 @@
+"use server"
+
 import Commentsinputbox from "@/components/Comments/Commentsinputbox"
 import { createClient } from "@/lib/supabase/server";
 import { Allcommentsdisplay } from "../components/Allcommentsdisplay";
@@ -18,21 +20,44 @@ export async function Commentsdetails({ params }: Props) {
 
     const { data, error } = await supabase
         .from("vocab_comments")
-
-        .select("*")
+        .select(`
+        *,
+        vocab_comment_likes(
+            comment_id,
+            user_id
+        )
+    `)
         .eq("vocab_number", vocabnumber);
 
+    const { data: { user } } = await supabase.auth.getUser();
+
+    console.log(data)
 
     if (error) {
         console.log("error occurred")
     }
 
-    console.log(data)
+
+    const filtereddata = data?.map((ele) => {
+        const { vocab_comment_likes, user_id, ...rest } = ele;
+
+        const ifliked = vocab_comment_likes.some(
+            (like: any) => like.user_id === user?.id
+        );
+
+        return {
+            ...rest,
+            amountoflikes: vocab_comment_likes.length,
+            ifliked
+        };
+    });
+
+    console.log(filtereddata)
 
     return (
         <div>
             <Commentsinputbox />
-            <Allcommentsdisplay Allcomments={data} />
+            <Allcommentsdisplay Allcomments={filtereddata ?? []} />
 
 
         </div>
