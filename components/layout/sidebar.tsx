@@ -4,31 +4,21 @@ import type { ReactNode } from "react";
 
 export default function Sidebar() {
   return (
-    <aside className="mythic-surface-soft h-full w-full p-6 flex flex-col justify-between">
+    <aside className="mythic-surface-soft flex h-[80vh] w-full flex-col justify-between p-6">
       <div className="space-y-6">
         <div className="space-y-4">
-          <SidebarButton href="/celebrities" icon={<User size={18} />} label="Most liked vocabs" />
-          <SidebarButton href="/characters" icon={<Users size={18} />} label="Most frequently used" />
-          <SidebarButton href="/concepts" icon={<Rocket size={18} />} label="Newest trends" />
+          <SidebarButton href="/vocab/mostliked" icon={<User size={18} />} label="Most liked vocabs" />
+          <SidebarButton href="/vocab/mostused" icon={<Users size={18} />} label="Most frequently used" />
+          <SidebarButton href="/vocab/trending" icon={<Rocket size={18} />} label="Newest trends" />
         </div>
 
         <div className="space-y-3 pt-6 text-sm text-muted-foreground">
-          <Link href="/pdb-wiki" className="block hover:text-primary transition-colors">
-            Pdb Wiki
+          <Link href="/pdb-wiki" className="block transition-colors hover:text-primary">
+            About us
           </Link>
 
-          <Link
-            href="/personality-development"
-            className="block hover:text-primary transition-colors"
-          >
-            Personality Development
-          </Link>
-
-          <Link
-            href="/personality-compatibility"
-            className="block hover:text-primary transition-colors"
-          >
-            Personality Compatibility
+          <Link href="/privacy-policy" className="block transition-colors hover:text-primary">
+            Privacy policy
           </Link>
         </div>
       </div>
@@ -52,18 +42,18 @@ function SidebarButton({
       href={href}
       className="
         flex items-center gap-3
-        px-4 py-3
         rounded-full
         border border-secondary/35
         bg-gradient-to-r from-secondary/12 via-accent/10 to-primary/10
+        px-4 py-3
         text-foreground
-        hover:from-secondary/18 hover:via-accent/14 hover:to-primary/14
-        hover:border-secondary/60
-        hover:shadow-[0_0_18px_hsl(var(--secondary)/0.35)]
         transition-all duration-300
+        hover:border-secondary/60
+        hover:from-secondary/18 hover:via-accent/14 hover:to-primary/14
+        hover:shadow-[0_0_18px_hsl(var(--secondary)/0.35)]
       "
     >
-      <span className="p-2 rounded-full bg-primary/10 border border-primary/25 text-primary">
+      <span className="rounded-full border border-primary/25 bg-primary/10 p-2 text-primary">
         {icon}
       </span>
       <span className="font-medium">{label}</span>

@@ -1,60 +1,50 @@
-"use client";
-
 import Link from "next/link";
+import { createClient } from "@/lib/supabase/server";
 
-type VocabTypeCardProps = {
+type Category = {
   title: string;
-  description: string;
-  href: string;
+  type_number: string | number;
 };
 
-function VocabTypeCard({ title, description, href }: VocabTypeCardProps) {
-  return (
-    <Link
-      href={href}
-      className="mythic-surface-soft group w-full min-w-[220px] max-w-[260px] px-5 py-4 transition-all duration-200 hover:bg-accent/20 hover:shadow-[0_0_22px_hsl(var(--secondary)/0.25)] hover:[background-image:linear-gradient(145deg,hsl(var(--card)/0.82),hsl(var(--background)/0.7)),linear-gradient(135deg,hsl(var(--primary)/0.12),hsl(var(--secondary)/0.2))]"
-    >
-      <div className="flex items-start justify-between gap-3">
-        <div className="flex flex-col gap-1">
-          <div className="text-sm font-semibold tracking-tight">{title}</div>
-          <div className="text-xs text-muted-foreground">{description}</div>
-        </div>
-        <span className="text-primary/80 transition-colors group-hover:text-primary">
-          →
-        </span>
-      </div>
-    </Link>
-  );
-}
+export default async function FourCardsHorizontal() {
+  const supabase = await createClient();
 
-const vocabTypeCards: VocabTypeCardProps[] = [
-  {
-    title: "English Abbreviations",
-    description: "Short forms used daily",
-    href: "/vocab/type/English_abbreviation",
-  },
-  {
-    title: "Commonly Used",
-    description: "Everyday slang and phrases",
-    href: "/vocab/type/Commonly_used",
-  },
-  {
-    title: "Internet Slang",
-    description: "Online memes and modern terms",
-    href: "/vocab/type/Internet_slang",
-  },
-  {
-    title: "Trending",
-    description: "What people are saying now",
-    href: "/vocab/trending",
-  },
-];
+  const { data, error } = await supabase
+    .from("vocab_types")
+    .select("title, type_number")
+    .limit(4);
 
-export default function FourCardsHorizontal() {
+  if (error) {
+    return <div>Failed to load categories.</div>;
+  }
+
+  const categories: Category[] = data ?? [];
+
   return (
-    <section className="flex flex-wrap gap-4">
-      {vocabTypeCards.map((card) => (
-        <VocabTypeCard key={card.href} {...card} />
+    <section className="grid grid-cols-1 gap-5 sm:grid-cols-2">
+      {categories.map((category) => (
+        <Link
+          key={category.type_number}
+          href={`/vocab/categories/${category.type_number}`}
+          className="mythic-surface-soft group block rounded-2xl px-4 py-4 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_0_18px_hsl(var(--primary)/0.16)] hover:[background-image:linear-gradient(145deg,hsl(var(--card)/0.88),hsl(var(--background)/0.76)),linear-gradient(135deg,hsl(var(--primary)/0.1),hsl(var(--secondary)/0.12))]"
+        >
+          <div className="flex items-start justify-between gap-3">
+            <div className="space-y-2">
+              <div className="flex h-9 w-9 items-center justify-center rounded-xl border border-primary/25 bg-primary/10 text-xs font-semibold text-primary">
+                {String(category.type_number).padStart(2, "0")}
+              </div>
+              <h2 className="text-base font-semibold leading-tight text-foreground">
+                {category.title}
+              </h2>
+              <p className="text-xs leading-5 text-muted-foreground">
+                Jump into this vocab set.
+              </p>
+            </div>
+            <span className="pt-1 text-base text-primary/70 transition-transform duration-300 group-hover:translate-x-1 group-hover:text-primary">
+              &rarr;
+            </span>
+          </div>
+        </Link>
       ))}
     </section>
   );

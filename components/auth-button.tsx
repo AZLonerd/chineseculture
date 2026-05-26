@@ -4,7 +4,6 @@ import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { Button } from './ui/button';
 import { createClient } from '@/lib/supabase/client';
-import { LogoutButton } from './logout-button';
 import { useSignupStore } from '@/lib/stores/signup-store';
 
 
@@ -73,7 +72,9 @@ export function AuthButton() {
   return user ? (
     <div className="flex items-center gap-4">
       Hey, {usernametodisplay}!
-      <LogoutButton />
+      <Button asChild size="sm" variant="outline">
+        <Link href="/protected/dashboard">Dashboard</Link>
+      </Button>
     </div>
   ) : (
     <div className="flex gap-2">

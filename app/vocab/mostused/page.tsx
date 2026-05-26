@@ -1,9 +1,9 @@
 import { Suspense } from "react"
-import { Fetchmosttrendingvocab } from "./fetchmosttrendingvocab"
+import { Fetchmostusedfromdb } from "./fetchmostusedfromdb"
 import VocabCard from "../components/VocabCard"
 
-async function TrendingGrid() {
-    const mostused = await Fetchmosttrendingvocab();
+async function MostUsedGrid() {
+    const mostused = await Fetchmostusedfromdb();
 
     return (
         <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
@@ -21,8 +21,8 @@ async function TrendingGrid() {
 
 export default function Page() {
     return (
-        <Suspense fallback={<div className="text-sm text-muted-foreground">Loading trending vocab...</div>}>
-            <TrendingGrid />
+        <Suspense fallback={<div className="text-sm text-muted-foreground">Loading most used vocab...</div>}>
+            <MostUsedGrid />
         </Suspense>
     )
 }

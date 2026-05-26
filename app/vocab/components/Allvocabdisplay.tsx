@@ -11,8 +11,9 @@ import VocabCard from "./VocabCard";
 
 type VocabItem = {
     id: string | number;
-    vocab_number: string;
+    vocab_number: string | number;
     word: string;
+    definition?: string | null;
 };
 
 
@@ -30,7 +31,7 @@ export default function Allvocabtodisplay({
 }) {
     const [query, setQuery] = useState("");
     const [currentPage, setCurrentPage] = useState(1);
-    const itemsPerPage = 10;
+    const itemsPerPage = 12;
 
     const filteredVocabs = vocablist.filter((vocab) => {
         const searchTerm = query.trim().toLowerCase();
@@ -38,7 +39,7 @@ export default function Allvocabtodisplay({
         if (!searchTerm) return true;
 
         const word = vocab.word.toLowerCase();
-        const vocabNumber = vocab.vocab_number.toLowerCase();
+        const vocabNumber = String(vocab.vocab_number).toLowerCase();
 
         const normalMatch = word.includes(searchTerm) || vocabNumber.includes(searchTerm);
 
@@ -89,9 +90,14 @@ export default function Allvocabtodisplay({
             </div>
 
 
-            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+            <div className="grid grid-cols-1 gap-5 sm:grid-cols-3">
                 {paginatedVocabs.map((vocab) => (
-                    <VocabCard key={vocab.id} id={vocab.vocab_number} word={vocab.word} />
+                    <VocabCard
+                        key={vocab.id}
+                        id={String(vocab.vocab_number)}
+                        word={vocab.word}
+                        definition={vocab.definition ?? ""}
+                    />
                 ))}
             </div>
 
