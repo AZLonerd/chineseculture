@@ -1,19 +1,44 @@
-"use server"
+"use server";
 
-import { createClient } from "@/lib/supabase/server"
-export async function Fetchmostlikedvocab() {
+type MostLikedVocab = {
+    vocab_number: string | number;
+    word?: string | null;
+    definition?: string | null;
+};
 
-    const supabase = await createClient();
+export async function Fetchmostlikedvocab(): Promise<MostLikedVocab[]> {
+    const baseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+    const apiKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ?? "";
 
-    const { data, error } = await supabase
-        .rpc("get_most_liked_vocab");
-
-    if (error) {
-        console.log("error happened")
+    if (!baseUrl || !apiKey) {
+        return [];
     }
 
-    console.log(data)
+    const url = `${baseUrl}/rest/v1/rpc/get_most_liked_vocab`;
 
-    return data;
+    const headers = {
+        apikey: apiKey,
+        Authorization: `Bearer ${apiKey}`,
+        "Content-Type": "application/json",
+    };
 
+    try {
+        const res = await fetch(url, {
+            method: "POST",
+            headers,
+            next: { revalidate: 60 },
+            body: JSON.stringify({}),
+        });
+
+        if (!res.ok) {
+            console.error("Error fetching most liked vocab:", res.status, res.statusText);
+            return [];
+        }
+
+        const data: MostLikedVocab[] = await res.json();
+        return data ?? [];
+    } catch (err) {
+        console.error("Fetch failed for most liked vocab:", err);
+        return [];
+    }
 }
