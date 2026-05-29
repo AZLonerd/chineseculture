@@ -31,8 +31,6 @@ export async function Commentsdetails({ params }: Props) {
 
     const { data: { user } } = await supabase.auth.getUser();
 
-    console.log(data)
-
     if (error) {
         console.log("error occurred")
     }

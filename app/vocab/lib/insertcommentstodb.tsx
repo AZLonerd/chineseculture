@@ -40,6 +40,10 @@ export async function Insertcommentstodb(
 
 
     if (error) {
+        if (error.message?.includes("up to 5 comments per vocab")) {
+            throw new Error("You’ve reached the 5-comment limit for this vocab.");
+        }
+
         throw error
     }
 

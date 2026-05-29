@@ -29,6 +29,7 @@ export default function Commentsinputbox() {
   const params = useParams<{ id: string }>();
   const [commentcontent, setComment] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState("");
   const addComment = useCommentsStore((state) => state.addComment);
   const username = useSignupStore((state) => state.username);
 
@@ -41,6 +42,7 @@ export default function Commentsinputbox() {
 
     try {
       setIsSubmitting(true);
+      setSubmitError("");
       const vocabNumber = Number(params.id);
       const insertedComment = getInsertedComment(
         (await Insertcommentstodb(vocabNumber, trimmedComment)) as
@@ -61,6 +63,12 @@ export default function Commentsinputbox() {
         },
       );
       setComment("");
+    } catch (error) {
+      setSubmitError(
+        error instanceof Error
+          ? error.message
+          : "Unable to post comment right now.",
+      );
     } finally {
       setIsSubmitting(false);
     }
@@ -122,6 +130,10 @@ export default function Commentsinputbox() {
           </Button>
         </div>
       </div>
+
+      {submitError ? (
+        <p className="text-sm text-destructive">{submitError}</p>
+      ) : null}
     </section>
   );
 }

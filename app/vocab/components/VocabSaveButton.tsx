@@ -1,24 +1,47 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Bookmark } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { createClient } from "@/lib/supabase/client";
 
 import { Addsavetodb } from "../lib/addsavetodb";
 
 type VocabSaveButtonProps = {
   vocabid: string | number;
-  initialSaved?: boolean;
 };
 
-export function VocabSaveButton({
-  vocabid,
-  initialSaved = false,
-}: VocabSaveButtonProps) {
-  const [isSaved, setIsSaved] = useState(initialSaved);
+export function VocabSaveButton({ vocabid }: VocabSaveButtonProps) {
+  const [isSaved, setIsSaved] = useState(false);
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    const supabase = createClient();
+
+    const loadSavedState = async () => {
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+
+      if (!user) {
+        setIsSaved(false);
+        return;
+      }
+
+      const { data: savedVocab } = await supabase
+        .from("vocab_save")
+        .select("id")
+        .eq("user_id", user.id)
+        .eq("vocab_id", vocabid)
+        .maybeSingle();
+
+      setIsSaved(Boolean(savedVocab));
+    };
+
+    void loadSavedState();
+  }, [vocabid]);
 
   const handleSaveToggle = async () => {
     if (loading) return;

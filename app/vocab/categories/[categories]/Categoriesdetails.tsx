@@ -14,6 +14,8 @@ type Props = {
 };
 
 export default async function Categoriesdetails({ params }: Props) {
+
+
     const { categories } = await params;
     const supabase = await createClient();
     const { data: categoryData, error: categoryError } = await supabase

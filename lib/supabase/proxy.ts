@@ -3,6 +3,15 @@ import { NextResponse, type NextRequest } from "next/server";
 import { hasEnvVars } from "../utils";
 
 const PUBLIC_PATH_PREFIXES = ["/auth", "/vocab", "/culture"];
+const USERNAME_SETUP_PATH_PREFIXES = [
+  "/auth/callback",
+  "/auth/check-ifusername",
+  "/auth/confirm",
+  "/auth/createusername",
+  "/auth/error",
+  "/auth/forgot-password",
+  "/auth/update-password",
+];
 
 export async function updateSession(request: NextRequest) {
   let supabaseResponse = NextResponse.next({
@@ -59,6 +68,29 @@ export async function updateSession(request: NextRequest) {
     url.pathname = "/auth/login";
     return NextResponse.redirect(url);
   }
+
+  if (user?.sub) {
+    const { data: profile, error: profileError } = await supabase
+      .from("profiles")
+      .select("username")
+      .eq("id", user.sub)
+      .maybeSingle();
+
+    const isUsernameSetupPath = USERNAME_SETUP_PATH_PREFIXES.some((path) =>
+      pathname.startsWith(path),
+    );
+
+    if (!profileError && !profile?.username && !isUsernameSetupPath) {
+      const url = request.nextUrl.clone();
+      const next = `${pathname}${request.nextUrl.search}` || "/";
+
+      url.pathname = "/auth/createusername";
+      url.searchParams.set("next", next);
+
+      return NextResponse.redirect(url);
+    }
+  }
+
 
   // IMPORTANT: You *must* return the supabaseResponse object as it is.
   // If you're creating a new response object with NextResponse.next() make sure to:

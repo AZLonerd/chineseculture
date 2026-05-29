@@ -4,6 +4,7 @@ import VocabPageShell from "./components/VocabPageShell";
 import CategoriesList from "./lib/fetchallcategories";
 import VocabList from "./lib/fetchallvocab";
 
+
 export default function Page() {
     return (
         <main className="min-h-screen">

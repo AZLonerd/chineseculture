@@ -5,7 +5,8 @@ import { CalendarDays } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import VocabCard from "@/app/vocab/components/VocabCard";
-import { Fetchvocaboftheday } from "@/app/vocab/lib/fetchvocaboftheday";
+import { Fetchvocaboftheday } from "../vocab/lib/fetchvocaboftheday";
+
 
 type VocabOfTheDayItem = {
   id: string | number;
