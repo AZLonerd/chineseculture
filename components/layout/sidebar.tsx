@@ -4,7 +4,7 @@ import type { ReactNode } from "react";
 
 export default function Sidebar() {
   return (
-    <aside className="mythic-surface-soft flex h-[80vh] w-full flex-col justify-between p-6">
+    <aside className="mythic-surface-soft flex h-auto w-full flex-col justify-between gap-8 p-5 sm:p-6 xl:h-[80vh]">
       <div className="space-y-6">
         <div className="space-y-4">
           <SidebarButton href="/vocab/mostliked" icon={<User size={18} />} label="Most liked vocabs" />
@@ -13,17 +13,21 @@ export default function Sidebar() {
         </div>
 
         <div className="space-y-3 pt-6 text-sm text-muted-foreground">
-          <Link href="/pdb-wiki" className="block transition-colors hover:text-primary">
+          <Link href="/about" className="block transition-colors hover:text-primary">
             About us
           </Link>
 
           <Link href="/privacy-policy" className="block transition-colors hover:text-primary">
             Privacy policy
           </Link>
+
+          <Link href="/submit-definition" className="block transition-colors hover:text-primary">
+            Submit definition
+          </Link>
         </div>
       </div>
 
-      <div className="text-xs text-muted-foreground">© 2026 ChinaYaCulture</div>
+      <div className="text-xs text-muted-foreground">(c) 2026 ChinaYaCulture</div>
     </aside>
   );
 }

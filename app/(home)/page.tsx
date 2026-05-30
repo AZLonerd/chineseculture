@@ -48,24 +48,28 @@ export default function Home() {
           </Suspense>
         )}
       </div>
-      <div className="flex gap-6 px-6 py-6">
-        <div className="w-[20%]">
+      <div className="flex flex-col gap-6 px-4 py-6 sm:px-6 xl:flex-row">
+        <div className="hidden xl:block xl:w-[20%] xl:flex-none">
           <div className="sticky top-6 h-[calc(100vh-3rem)]">
             <Sidebar />
           </div>
         </div>
 
-        <div className="w-[55%] space-y-6">
+        <div className="min-w-0 flex-1 space-y-6 xl:max-w-[55%]">
           <Bigcardforintro />
           <Suspense fallback={<VocabCategoryCardsFallback />}>
             <FourCardsHorizontal />
           </Suspense>
         </div>
 
-        <div className="w-[20%]">
-          <div className="sticky top-6">
+        <div className="order-3 w-full xl:order-2 xl:w-[20%] xl:flex-none">
+          <div className="xl:sticky xl:top-6">
             <VocabOfTheDayReveal />
           </div>
+        </div>
+
+        <div className="order-2 xl:hidden">
+          <Sidebar />
         </div>
       </div>
 

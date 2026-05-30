@@ -11,7 +11,7 @@ export default function VocabCard({ id, word, definition }: VocabCardProps) {
     return (
         <Link
             href={`/vocab/${id}`}
-            className="block min-h-[120px] max-w-[360px] rounded-2xl border border-border/60 bg-card/70 p-4 shadow-sm transition hover:-translate-y-0.5 hover:shadow-lg"
+            className="block min-h-[120px] max-w-[360px] rounded-2xl border border-border/60 bg-card/70 p-4 shadow-sm outline-none focus:outline-none focus-visible:outline-none"
         >
             <div className="flex h-full flex-col justify-between gap-4">
                 <div className="space-y-2">

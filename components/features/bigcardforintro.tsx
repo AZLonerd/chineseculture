@@ -6,7 +6,7 @@ const Bigcardforintro = () => {
           Modern culture, timeless roots
         </p>
         <h1 className="text-3xl font-semibold tracking-tight">
-          Welcome to <span className="text-primary">ChinaYaCulture</span>
+          Welcome to <span className="text-secondary">ChinaYaCulture</span>
         </h1>
         <p className="text-muted-foreground max-w-prose">
           Learn Gen Z China culture and slang with bite-sized vocab, examples, and context.
